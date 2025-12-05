@@ -1,0 +1,121 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Testing
+coverage/
+/test-results/
+*.log
+
+# Next.js
+.next/
+/out/
+.next/
+.next/**/*
+!.next/static/
+!.next/static/media/
+
+# Production
+/build/
+/dist/
+/public/dist/
+
+# Environment variables - Keep local env files out of Docker but allow .env files from project root if needed
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+
+# System
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+.directory
+.HFS_Plus_Standard_Metadata_Bitmap
+apfs_metadata
+
+# Logs
+*.log
+
+# NPM
+jspm_packages/
+
+# Coverage
+.nyc_output/
+
+# TypeScript
+*.tsbuildinfo
+
+# Drizzle
+drizzle/
+drizzle.config.ts
+
+# Cache and temp files
+.npm/
+.cache/
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Database
+*.db
+*.db-journal
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+VolumeIcon.icns
+
+# Sensitive files
+config/
+secrets/
+*.key
+*.pem
+*.crt
+*.cert
+
+# Playwright
+test-results/
+playwright-report/
+
+# Git and Docker - Important: don't include git files in Docker image
+.git/
+.gitignore
+.dockerignore
+
+# Documentation
+*.md
+*.txt
+*.pdf
+
+# Development and test files
+tests/
+vitest.config.ts
+playwright.config.ts
+eslint.config.mjs
+tailwind.config.ts
+postcss.config.mjs
+tsconfig.json
+
+# Source maps
+*.map
+
+# End of .dockerignore
