@@ -8,7 +8,7 @@
 ## Installation
 
 ```bash
-git clone <repo>
+git clone https://github.com/Abimael10/workhub-app.git
 cd workhub-app
 cp .env.example.local .env.local
 npm install
