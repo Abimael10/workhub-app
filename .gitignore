@@ -1,0 +1,128 @@
+# Dependencies
+/node_modules/
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Testing
+/coverage/
+/test-results/
+*.log
+*.tmp
+
+# Next.js
+/.next/
+/out/
+.next/
+.next/**/*
+!.next/static/
+!.next/static/media/
+
+# Production
+/build/
+/dist/
+/public/dist/
+
+# Environment variables - be specific about which ones to ignore
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database
+*.db
+*.db-journal
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+
+# System
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+.directory
+.HFS_Plus_Standard_Metadata_Bitmap
+apfs_metadata
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.log
+
+# NPM
+node_modules/
+jspm_packages/
+
+# Coverage
+coverage/
+.nyc_output/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+**/*.tsbuildinfo
+
+# Drizzle
+drizzle/seed.ts
+
+# Build outputs
+.next/cache/
+.npm/
+.cache/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+VolumeIcon.icns
+
+# Sensitive files
+config/
+secrets/
+*.key
+*.pem
+*.crt
+*.cert
+
+# Playwright
+test-results/
+playwright-report/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# IDE specific
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Vim
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+# End of .gitignore
