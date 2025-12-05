@@ -3,9 +3,9 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "Entipedia | Espacio de trabajo SaaS premium",
+  title: "WorkHub | Espacio de trabajo",
   description:
-    "Entipedia es un espacio de trabajo modular y nativo de la nube para que los equipos gestionen proyectos, clientes y archivos en un panel único.",
+    "WorkHub es un espacio de trabajo modular y nativo de la nube para que los equipos gestionen proyectos, clientes y archivos en un panel único.",
 };
 
 export default function RootLayout({
