@@ -59,7 +59,7 @@ npm run dev        # Development server
 npm run build      # Build for production
 npm run start      # Start production server
 npm run test       # Unit/integration tests
-npm run test:e2e   # Automated E2E tests (auth + basic dashboard validation)
+npm run test:e2e   # Automated E2E tests (some tests are running correctly, needed to refactor some as a TODO)
 npm run lint       # Lint codebase
 npm run db:push    # Apply database schema
 ```
