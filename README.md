@@ -26,7 +26,7 @@ docker compose -f docker-compose.local.yml up -d db minio minio-setup redis web
 make dev-down
 ```
 
-3. Configure database:
+3. Configure database (`Note`: make sure to run this once for your environment, otherwise you will not be able to register to continue exploring the application):
 ```bash
 npm run db:push
 ```
