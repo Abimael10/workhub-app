@@ -49,6 +49,9 @@ ENV PORT=3000
 COPY package.json package-lock.json ./
 COPY --from=deps /app/node_modules ./node_modules
 RUN npm prune --omit=dev && npm cache clean --force
+# Keep migration assets available for optional runtime db:push
+COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
+COPY --from=builder /app/src ./src
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 
