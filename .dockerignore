@@ -60,7 +60,6 @@ jspm_packages/
 
 # Drizzle
 drizzle/
-drizzle.config.ts
 
 # Cache and temp files
 .npm/
