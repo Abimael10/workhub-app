@@ -57,14 +57,14 @@ services:
     environment:
       NODE_ENV: development
       DATABASE_URL: postgres://postgres:postgres@db:5432/workhub
-      NEXTAUTH_SECRET: replace-me
+      NEXT_AUTH_SECRET: replace-me
       NEXTAUTH_URL: http://localhost:3000
-      AWS_S3_MAX_UPLOAD_MB: 25
+      AWS_S3_MAX_UPLOAD: 25
       AWS_ACCESS_KEY_ID: local-minio
       AWS_SECRET_ACCESS_KEY: local-minio-secret
-      AWS_S3_BUCKET: workhub-local
-      AWS_S3_REGION: us-east-1
-      AWS_S3_ENDPOINT: http://minio:9000
+      AWS_S3_BUCKET_NAME: workhub-local
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ENDPOINT_URL: http://minio:9000
       REDIS_URL: redis://redis:6379
     volumes:
       - .:/app

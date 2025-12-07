@@ -17,11 +17,11 @@ type UploadRequest = {
 };
 
 class FilesStorage {
-  private readonly maxUploadBytes = env.AWS_S3_MAX_UPLOAD_MB * 1024 * 1024;
+  private readonly maxUploadBytes = env.AWS_S3_MAX_UPLOAD * 1024 * 1024;
 
   constructor(private readonly client: S3Client, private readonly bucket: string) {
     if (!bucket) {
-      throw new Error("[storage] AWS_S3_BUCKET must be provided");
+      throw new Error("[storage] AWS_S3_BUCKET_NAME must be provided");
     }
     if (!env.AWS_ACCESS_KEY_ID || !env.AWS_SECRET_ACCESS_KEY) {
       console.warn(
@@ -31,7 +31,7 @@ class FilesStorage {
     if (process.env.NODE_ENV !== "production") {
       console.log("[storage] Initialized", {
         bucket: this.bucket,
-        endpoint: env.AWS_S3_ENDPOINT ?? "aws",
+        endpoint: env.AWS_ENDPOINT_URL ?? "aws",
       });
     }
   }
@@ -42,7 +42,7 @@ class FilesStorage {
     }
     if (params.size <= 0 || params.size > this.maxUploadBytes) {
       throw new Error(
-        `El tamaño del archivo debe estar entre 1 byte y ${env.AWS_S3_MAX_UPLOAD_MB} MB.`,
+        `El tamaño del archivo debe estar entre 1 byte y ${env.AWS_S3_MAX_UPLOAD} MB.`,
       );
     }
     if (!params.mimeType) {
@@ -112,7 +112,7 @@ class FilesStorage {
   async directUpload(params: { storageKey: string; body: Buffer; mimeType: string; size: number }) {
     if (params.size <= 0 || params.size > this.maxUploadBytes) {
       throw new Error(
-        `El tamaño del archivo debe estar entre 1 byte y ${env.AWS_S3_MAX_UPLOAD_MB} MB.`,
+        `El tamaño del archivo debe estar entre 1 byte y ${env.AWS_S3_MAX_UPLOAD} MB.`,
       );
     }
 
@@ -128,6 +128,6 @@ class FilesStorage {
   }
 }
 
-export const filesStorage = new FilesStorage(s3Client, env.AWS_S3_BUCKET);
+export const filesStorage = new FilesStorage(s3Client, env.AWS_S3_BUCKET_NAME);
 
 export type FilesStorageAdapter = typeof filesStorage;

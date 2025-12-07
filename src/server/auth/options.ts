@@ -47,7 +47,7 @@ function clearAttempts(identifier: string) {
 }
 
 export const authOptions: NextAuthOptions = {
-  secret: env.NEXTAUTH_SECRET,
+  secret: env.NEXT_AUTH_SECRET,
   adapter: createAuthAdapter(db),
   session: {
     strategy: "jwt",

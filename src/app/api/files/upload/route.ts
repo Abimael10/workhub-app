@@ -8,7 +8,7 @@ import { getMembershipByUserAndOrganization } from "@/server/db/repositories/mem
 import { db } from "@/server/db";
 import { env } from "@/lib/utils/env";
 
-const MAX_UPLOAD_BYTES = env.AWS_S3_MAX_UPLOAD_MB * 1024 * 1024;
+const MAX_UPLOAD_BYTES = env.AWS_S3_MAX_UPLOAD * 1024 * 1024;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 20;
 const uploadBuckets = new Map<string, { count: number; windowStart: number }>();
