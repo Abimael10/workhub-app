@@ -133,7 +133,7 @@ export default function RegisterPage() {
 
         <div className="flex-1">
           <div className="relative mx-auto w-full max-w-[720px] overflow-hidden rounded-[32px] shadow-2xl aspect-[16/9] min-h-[420px]">
-            <div className="relative h-full w-full">
+            <div className="relative h-full w-full image-fade-effect">
               <Image
                 src="/assets/the-man-final-1.gif"
                 alt="Animación del flujo de trabajo en tiempo real"
