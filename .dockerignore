@@ -58,8 +58,6 @@ jspm_packages/
 # TypeScript
 *.tsbuildinfo
 
-# Drizzle
-drizzle/
 
 # Cache and temp files
 .npm/
