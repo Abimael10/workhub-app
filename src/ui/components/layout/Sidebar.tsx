@@ -25,6 +25,7 @@ export function Sidebar() {
             width={380}
             height={70}
             priority
+            unoptimized
             className="h-28 w-auto max-w-full"
           />
         </Link>
