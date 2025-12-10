@@ -39,7 +39,7 @@ export default function LoginPage() {
             <div className="flex items-center justify-center">
               <Image
                 src="/assets/workhub-logo-2.png"
-                alt="Enti"
+                alt="Workhub Logo"
                 width={160}
                 height={46}
                 priority
