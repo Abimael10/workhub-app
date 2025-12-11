@@ -29,6 +29,7 @@ export const users = pgTable(
   },
 );
 
+// NextAuth accounts table for OAuth/OIDC providers; unused for local login flows today.
 export const accounts = pgTable(
   "accounts",
   {

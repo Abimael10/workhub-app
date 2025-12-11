@@ -72,6 +72,12 @@ npx playwright test --headed        # Visible browser mode
 npx playwright test --ui            # Playwright UI runner
 ```
 
+## Schema Notes
+
+- Drizzle schema lives in `src/server/db/schema` and generates SQL under `drizzle/`.
+- The `accounts` table comes from NextAuth to support optional OAuth/OIDC providers; with email/password-only flows it stays empty. Token columns are plain `text` fields—add encryption/rotation if enabling external providers.
+- Apply schema changes with `npm run db:push` after updating the Drizzle models; review generated SQL before committing.
+
 ## Considerations
 
 - Because this was built under time constraints, you may find some partial patterns that weren’t fully refactored. Functionality was prioritized over optimization.
