@@ -1,21 +1,11 @@
 import { defineConfig } from "drizzle-kit";
-import { loadEnvConfig } from "@next/env";
-
-loadEnvConfig(process.cwd(), true);
-
-if (!process.env.DATABASE_URL) {
-  console.warn("DATABASE_URL is not set – Drizzle commands may fail.");
-}
 
 export default defineConfig({
-  schema: "./src/server/db/schema/*.ts",
   out: "./drizzle",
+  schema: "./src/server/db/schema/*.ts",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL ?? "",
-  },
-  migrations: {
-    prefix: "timestamp",
+    url: process.env.DATABASE_URL!,
   },
   strict: true,
   verbose: true,
