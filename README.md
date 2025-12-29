@@ -81,3 +81,7 @@ npx playwright test --ui            # Playwright UI runner
 ## Considerations
 
 - Because this was built under time constraints, you may find some partial patterns that weren’t fully refactored. Functionality was prioritized over optimization.
+
+## Build Notes
+
+When building the application, ensure that `NEXTAUTH_URL` and `NEXT_PUBLIC_APP_URL` environment variables are set to valid URLs, otherwise the build will fail during page data collection.
