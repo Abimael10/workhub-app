@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const defaultBaseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://workhub.app";
+const defaultBaseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://workhub-app.up.railway.app";
 
 export function createDashboardMetadata(params: {
   title: string;

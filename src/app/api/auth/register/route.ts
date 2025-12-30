@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ZodError } from "zod";
+import { ZodError, z } from "zod";
 import { registerUser, type RegistrationInput } from "@/server/auth/registration";
 
 export async function POST(request: Request) {
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json({ message: "Datos inválidos", issues: error.flatten() }, { status: 400 });
+      return NextResponse.json({ message: "Datos inválidos", issues: /*error.flatten()*/ z.treeifyError(error) }, { status: 400 });
     }
 
     if (error instanceof Error && error.message === "EMAIL_TAKEN") {

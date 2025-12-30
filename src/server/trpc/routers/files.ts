@@ -30,7 +30,7 @@ export const filesRouter = createTRPCRouter({
     }
   }),
   delete: protectedProcedure
-    .input(z.object({ id: z.string().uuid(), storageKey: z.string().min(1) }))
+    .input(z.object({ id: z.uuid(), storageKey: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
       const orgCtx = {
         ...ctx,

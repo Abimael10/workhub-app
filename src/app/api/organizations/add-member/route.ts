@@ -7,7 +7,7 @@ import { getUserByEmail } from "@/server/db/repositories/users-repo";
 import { getUserById } from "@/server/db/repositories/users-repo";
 
 const payloadSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   role: z.enum(["OWNER", "ADMIN", "MEMBER"]).default("MEMBER"),
 });
 

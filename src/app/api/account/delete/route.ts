@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     if (error instanceof ZodError) {
       logger.warn("Invalid delete account request", { domain: "account", operation: "delete" }, error);
       return NextResponse.json(
-        { message: "Confirma la eliminación escribiendo DELETE", issues: error.flatten() },
+        { message: "Confirma la eliminación escribiendo DELETE", issues: /*--- this shows as deprecated: error.flatten() ----*/ z.treeifyError(error) },
         { status: 400 },
       );
     }

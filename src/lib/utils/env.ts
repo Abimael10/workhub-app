@@ -5,7 +5,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
   NEXT_AUTH_SECRET: z.string().min(1, "NEXT_AUTH_SECRET is required"),
   NEXTAUTH_URL: z.url().optional(),
-  NEXT_PUBLIC_APP_URL: z.string().url().optional(),
+  NEXT_PUBLIC_APP_URL: z.url().optional(),
   AWS_ACCESS_KEY_ID: z.string().optional(),
   AWS_SECRET_ACCESS_KEY: z.string().optional(),
   AWS_DEFAULT_REGION: z.string().default("us-east-1"),
@@ -16,7 +16,7 @@ const envSchema = z.object({
   DEMO_USER_PASSWORD: z.string().min(8).optional(),
   DEMO_USER_NAME: z.string().optional(),
   AWS_S3_MAX_UPLOAD: z.coerce.number().min(1).max(200).default(25),
-  REDIS_URL: z.string().url().optional(),
+  REDIS_URL: z.url().optional(),
 });
 
 export const env = envSchema.parse({

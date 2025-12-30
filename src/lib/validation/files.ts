@@ -34,5 +34,5 @@ export const registerFileSchema = z.object({
 
 // Validation for batch operations
 export const batchDeleteFilesSchema = z.object({
-  ids: z.array(z.string().uuid()).min(1, "At least one file ID is required").max(100, "Maximum 100 files can be deleted at once"),
+  ids: z.array(z.uuid()).min(1, "At least one file ID is required").max(100, "Maximum 100 files can be deleted at once"),
 });
