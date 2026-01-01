@@ -64,6 +64,71 @@ npm run lint       # Lint codebase
 npm run db:push    # Apply database schema
 ```
 
+## Observability
+
+When running the application locally, you can use the following commands to observe the services:
+
+### Database Access
+Connect to the PostgreSQL database running in Docker:
+```bash
+# Using the Makefile command
+make db-shell
+
+# Or directly with Docker
+docker exec -it workhub-postgres psql -U postgres -d workhub
+
+# List all tables
+\dt
+
+# Describe a table
+\d table_name
+
+# Query data from a table
+SELECT * FROM users LIMIT 10;
+```
+
+### Service Logs
+View logs for all services or specific services:
+```bash
+# View logs for all services
+make dev-logs
+
+# View logs for specific service
+docker logs workhub-postgres    # PostgreSQL logs
+docker logs workhub-web         # Web application logs
+docker logs workhub-minio       # MinIO storage logs
+docker logs workhub-redis       # Redis logs
+
+# Follow logs in real-time
+docker logs -f workhub-web
+```
+
+### MinIO Storage Access
+Access the MinIO storage container:
+```bash
+# Using the Makefile command
+make minio-shell
+
+# Or directly with Docker
+docker exec -it workhub-minio /bin/sh
+
+# Access MinIO web console at http://localhost:9001
+# Credentials: local-minio / local-minio-secret
+```
+
+### Redis Access
+Connect to the Redis instance:
+```bash
+# Connect to Redis CLI
+docker exec -it workhub-redis redis-cli
+
+# View all keys
+KEYS *
+
+# Get value of a specific key
+GET key_name
+```
+
 ## E2E Tests
 
 ```bash
