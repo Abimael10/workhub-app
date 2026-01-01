@@ -4,6 +4,10 @@ import { getMembershipByUserAndOrganization, listMembershipsForUser } from "@/se
 import { getUserById } from "@/server/db/repositories/users-repo";
 import { filesStorage } from "@/server/storage/files-storage";
 
+/**
+ * Creates context for an incoming request
+ * @see https://trpc.io/docs/v11/context
+ */
 export async function createContext() {
   const session = await getCurrentUser();
   const userId = session?.user?.id ?? null;
@@ -30,4 +34,8 @@ export async function createContext() {
   };
 }
 
+/**
+ * Type definition for the tRPC context
+ * Contains database connection, session information, and organization context
+ */
 export type Context = Awaited<ReturnType<typeof createContext>>;

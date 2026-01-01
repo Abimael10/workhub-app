@@ -5,7 +5,16 @@ import { CLIENTS_PAGE_SIZE } from "@/domain/clients/constants";
 import * as clientsService from "@/server/application/clients/service";
 import { getRequestId } from "@/lib/logging/requestId";
 
+/**
+ * Clients router - handles all client-related operations
+ * All procedures require authentication and organization membership
+ */
 export const clientsRouter = createTRPCRouter({
+  /**
+   * List clients with pagination and optional search
+   * @param input Optional pagination and search parameters
+   * @returns Paginated list of clients
+   */
   list: protectedProcedure
     .input(listClientsSchema.partial().optional())
     .query(async ({ ctx, input }) => {
@@ -22,6 +31,11 @@ export const clientsRouter = createTRPCRouter({
       };
       return clientsService.listPage(orgCtx, params);
     }),
+  /**
+   * Create a new client
+   * @param input Client data including name, type, value, and dates
+   * @returns Created client
+   */
   create: protectedProcedure
     .input(createClientSchema)
     .mutation(async ({ ctx, input }) => {
@@ -39,6 +53,11 @@ export const clientsRouter = createTRPCRouter({
       });
       return client;
     }),
+  /**
+   * Update a client field
+   * @param input Client ID and field to update
+   * @returns Success confirmation
+   */
   updateField: protectedProcedure
     .input(updateClientFieldSchema)
     .mutation(async ({ ctx, input }) => {
@@ -56,6 +75,11 @@ export const clientsRouter = createTRPCRouter({
 
       return { success: true };
     }),
+  /**
+   * Delete a client
+   * @param input Client ID
+   * @returns Success confirmation
+   */
   delete: protectedProcedure
     .input(updateClientFieldSchema.pick({ id: true }))
     .mutation(async ({ ctx, input }) => {

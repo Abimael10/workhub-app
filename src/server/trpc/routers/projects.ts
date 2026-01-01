@@ -4,11 +4,24 @@ import { protectedProcedure, createTRPCRouter } from "../trpc";
 import * as projectsService from "@/server/application/projects/service";
 import { getRequestId } from "@/lib/logging/requestId";
 
+/**
+ * Projects router - handles all project-related operations
+ * All procedures require authentication and organization membership
+ */
 export const projectsRouter = createTRPCRouter({
+  /**
+   * List all projects for the current organization
+   * @returns Array of projects
+   */
   list: protectedProcedure.query(async ({ ctx }) => {
     const orgCtx = { ...ctx, organizationId: ctx.organizationId!, userId: ctx.userId! };
     return projectsService.list(orgCtx);
   }),
+  /**
+   * Create a new project
+   * @param input Project data including name, description, status, and priority
+   * @returns Created project
+   */
   create: protectedProcedure.input(createProjectSchema).mutation(async ({ ctx, input }) => {
     const orgCtx = { ...ctx, organizationId: ctx.organizationId!, userId: ctx.userId! };
     const projectData = {
@@ -21,6 +34,11 @@ export const projectsRouter = createTRPCRouter({
     const project = await projectsService.create(orgCtx, projectData);
     return project;
   }),
+  /**
+   * Change the status of a project
+   * @param input Project ID and new status
+   * @returns Updated project
+   */
   changeStatus: protectedProcedure
     .input(changeProjectStatusSchema)
     .mutation(async ({ ctx, input }) => {
@@ -37,6 +55,11 @@ export const projectsRouter = createTRPCRouter({
 
       return result.project;
     }),
+  /**
+   * Update project details
+   * @param input Project ID and updated fields (name, description, priority)
+   * @returns Updated project
+   */
   update: protectedProcedure
     .input(
       createProjectSchema
@@ -62,6 +85,11 @@ export const projectsRouter = createTRPCRouter({
 
       return updated.project;
     }),
+  /**
+   * Delete a project
+   * @param input Project ID
+   * @returns Success confirmation
+   */
   delete: protectedProcedure
     .input(changeProjectStatusSchema.pick({ id: true }))
     .mutation(async ({ ctx, input }) => {
