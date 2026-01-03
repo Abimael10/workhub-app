@@ -25,9 +25,9 @@ export function dashboardFilesTag(orgId: string) {
 
 // Revalidate windows per domain (seconds). Adjust to business freshness needs.
 const REVALIDATE_WINDOWS = {
-  [DASHBOARD_PROJECTS_TAG]: 30,
-  [DASHBOARD_CLIENTS_TAG]: 20,
-  [DASHBOARD_FILES_TAG]: 45,
+  [DASHBOARD_PROJECTS_TAG]: 60,  // Increased from 30s - projects change less frequently
+  [DASHBOARD_CLIENTS_TAG]: 120, // Increased from 20s - clients rarely change
+  [DASHBOARD_FILES_TAG]: 30,    // Reduced from 45s - files may be accessed more frequently
 } as const;
 
 export function getProjectsSnapshot(organizationId: string) {
