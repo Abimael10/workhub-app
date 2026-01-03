@@ -38,6 +38,11 @@ export const files = pgTable(
     filesOrgIdx: index("files_organization_id_idx").on(table.organizationId),
     filesCreatedAtIdx: index("files_created_at_idx").on(table.createdAt),
     filesUpdatedAtIdx: index("files_updated_at_idx").on(table.updatedAt),
+    // Add composite index for common query pattern
+    filesOrgCreatedStatusIdx: index("files_org_created_status_idx").on(
+      table.organizationId,
+      table.createdAt.desc()
+    ),
   }),
 );
 
