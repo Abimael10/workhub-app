@@ -75,3 +75,19 @@
   pointer-events: none;
   z-index: 1;
 }
+
+/* Desktop-only styles */
+.desktop-only {
+  min-width: 1024px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .desktop-only {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

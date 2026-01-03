@@ -8,6 +8,7 @@ import { api } from "@/lib/trpc/client";
 import { createQueryClient } from "@/lib/react-query/queryClient";
 import { Toaster } from "sonner";
 import { trpcTransformer } from "@/lib/trpc/transformer";
+import { DesktopOnly } from "@/ui/components/common/DesktopOnly";
 
 type ProvidersProps = {
   children: ReactNode;
@@ -50,7 +51,9 @@ export function Providers({ children }: ProvidersProps) {
   return (
     <api.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        {children}
+        <DesktopOnly>
+          {children}
+        </DesktopOnly>
         {process.env.NODE_ENV !== "production" && <ReactQueryDevtools buttonPosition="bottom-left" />}
         <Toaster closeButton theme="dark" richColors />
       </QueryClientProvider>
