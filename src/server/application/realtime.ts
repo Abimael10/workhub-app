@@ -10,7 +10,7 @@ const tagByTopic: Record<RealtimeTopic, (orgId: string) => string> = {
 };
 
 export async function invalidateAndPublish(params: { topic: RealtimeTopic; organizationId: string; entityId?: string }) {
-  // Revalidation happens via client-side mechanisms in Next.js 16
+  // Invalidate client-side cache via real-time events
   try {
     const event = {
       topic: params.topic,
@@ -24,5 +24,18 @@ export async function invalidateAndPublish(params: { topic: RealtimeTopic; organ
     }
   } catch (error) {
     logger.warn("Realtime publish failed (ignored)", { domain: "realtime", operation: "publish", orgId: params.organizationId }, error);
+  }
+
+  // Invalidate server-side cache
+  try {
+    const tag = tagByTopic[params.topic](params.organizationId);
+    revalidateTag(tag, {});
+  } catch (error) {
+    logger.warn("Server cache revalidation failed (ignored)", {
+      domain: "realtime",
+      operation: "revalidate",
+      orgId: params.organizationId,
+      meta: { topic: params.topic }
+    }, error);
   }
 }
