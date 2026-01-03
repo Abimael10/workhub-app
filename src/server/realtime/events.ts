@@ -42,6 +42,7 @@ class RedisBroker implements Broker {
   private publisher: NonNullable<ReturnType<typeof createRedisClient>>;
   private subscriber: NonNullable<ReturnType<typeof createRedisClient>>;
   private handlers = new Set<(event: RealtimeEvent) => void>();
+  private isSubscribed = false;
 
   constructor(url: string) {
     const publisher = createRedisClient(url);
@@ -52,16 +53,27 @@ class RedisBroker implements Broker {
     this.publisher = publisher;
     this.subscriber = subscriber;
 
-    this.subscriber.subscribe(CHANNEL).catch((error: unknown) => {
+    // Handle subscriber errors
+    this.subscriber.on("error", (error: unknown) => {
+      logger.error("Redis subscriber error", { domain: "realtime", operation: "subscribe" }, error);
+    });
+
+    this.subscriber.subscribe(CHANNEL).then(() => {
+      this.isSubscribed = true;
+      logger.info("Redis subscriber connected to channel", { domain: "realtime", operation: "subscribe" });
+    }).catch((error: unknown) => {
       logger.error("Redis subscribe failed; falling back to memory broker", { domain: "realtime", operation: "subscribe" }, error);
       throw error;
     });
 
     this.subscriber.on("message", (...args: unknown[]) => {
       try {
+        const channel = args[0] as string;
         const message = args[1] as string;
-        const parsed = JSON.parse(message) as RealtimeEvent;
-        this.handlers.forEach((handler) => handler(parsed));
+        if (channel === CHANNEL) {
+          const parsed = JSON.parse(message) as RealtimeEvent;
+          this.handlers.forEach((handler) => handler(parsed));
+        }
       } catch (error) {
         logger.warn("Failed to parse realtime message", { domain: "realtime", operation: "parse" }, error);
       }
@@ -69,7 +81,9 @@ class RedisBroker implements Broker {
   }
 
   async publish(event: RealtimeEvent) {
-    await this.publisher.publish(CHANNEL, JSON.stringify(event));
+    if (this.publisher && this.isSubscribed) {
+      await this.publisher.publish(CHANNEL, JSON.stringify(event));
+    }
   }
 
   subscribe(handler: (event: RealtimeEvent) => void) {
@@ -77,6 +91,15 @@ class RedisBroker implements Broker {
     return () => {
       this.handlers.delete(handler);
     };
+  }
+
+  // Add cleanup method for proper resource management
+  cleanup() {
+    if (this.isSubscribed) {
+      this.subscriber.unsubscribe(CHANNEL);
+      this.isSubscribed = false;
+    }
+    this.handlers.clear();
   }
 }
 
@@ -95,6 +118,21 @@ function createBroker(): Broker {
 }
 
 const broker = createBroker();
+
+// Add cleanup on process termination for graceful shutdown
+process.on('SIGINT', () => {
+  if (broker instanceof RedisBroker) {
+    broker.cleanup();
+  }
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  if (broker instanceof RedisBroker) {
+    broker.cleanup();
+  }
+  process.exit(0);
+});
 
 export const brokerKind = broker.kind;
 export const brokerReady = broker.kind === "redis";

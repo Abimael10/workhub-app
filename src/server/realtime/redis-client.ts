@@ -25,10 +25,26 @@ export function createRedisClient(url?: string) {
     return null;
   }
 
-  const client = new ctor(redisUrl);
+  const client = new ctor(redisUrl, {
+    maxRetriesPerRequest: 3,
+    retryDelayOnFailover: 100,
+    enableReadyCheck: true,
+    lazyConnect: true,
+    connectTimeout: 10000,
+    commandTimeout: 5000,
+    enableAutoPipelining: true,
+  });
 
   client.on("error", (error: unknown) => {
     logger.warn("Redis client error", { domain: "realtime", operation: "client-error" }, error);
+  });
+
+  client.on("connect", () => {
+    logger.info("Redis client connected", { domain: "realtime", operation: "client-connect" });
+  });
+
+  client.on("ready", () => {
+    logger.info("Redis client ready", { domain: "realtime", operation: "client-ready" });
   });
 
   return client;

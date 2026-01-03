@@ -39,15 +39,23 @@ function createRedisLimiter(client: Redis, config: Config): RateLimiter {
     async acquire(key: string) {
       const redisKey = `${config.prefix}:${key}`;
       try {
-        const count = await (client as any).incr(redisKey);
-        if (count === 1) {
-          await (client as any).pexpire(redisKey, config.windowMs);
-        }
-        const ttl = await (client as any).pttl(redisKey);
+        // Use Lua script for atomic increment and TTL setting
+        const luaScript = `
+          local current = redis.call("INCR", KEYS[1])
+          if current == 1 then
+            redis.call("PEXPIRE", KEYS[1], ARGV[1])
+          end
+          local ttl = redis.call("PTTL", KEYS[1])
+          return {current, ttl}
+        `;
+
+        const result = await client.eval(luaScript, 1, redisKey, config.windowMs);
+        const [count, rawTtl] = Array.isArray(result) ? result : [0, config.windowMs];
+        const ttl = typeof rawTtl === 'number' ? rawTtl : config.windowMs;
 
         return {
           ok: count <= config.max,
-          count,
+          count: typeof count === 'number' ? count : 1,
           ttlMs: ttl > 0 ? ttl : config.windowMs,
         };
       } catch (error) {
@@ -82,12 +90,16 @@ function createRedisReleaseLimiter(client: Redis, config: Config): ReleaseLimite
     async release(key: string) {
       try {
         const redisKey = `${config.prefix}:${key}`;
-        await (client as any).decr(redisKey); // Decrement the counter
-        // Add check to delete key if count reaches 0
-        const count = await (client as any).get(redisKey);
-        if (count && parseInt(count as string) <= 0) {
-          await (client as any).del(redisKey); // Clean up if counter is 0 or negative
-        }
+        // Use Lua script for atomic decrement and cleanup
+        const luaScript = `
+          local current = redis.call("DECR", KEYS[1])
+          if current <= 0 then
+            redis.call("DEL", KEYS[1])
+          end
+          return current
+        `;
+
+        await client.eval(luaScript, 1, redisKey);
       } catch (error) {
         logger.warn("Redis release limiter failed", { domain: "realtime", operation: "rate-limit-release" }, error);
       }
