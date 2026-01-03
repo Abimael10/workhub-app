@@ -53,6 +53,12 @@ export const projects = pgTable(
     projectsUpdatedAtIdx: index("projects_updated_at_idx").on(table.updatedAt),
     projectsStatusIdx: index("projects_status_idx").on(table.status),
     projectsPriorityIdx: index("projects_priority_idx").on(table.priority),
+    // Add composite index for common query pattern
+    projectsOrgStatusPriorityIdx: index("projects_org_status_priority_idx").on(
+      table.organizationId,
+      table.status,
+      table.priority
+    ),
   }),
 );
 
