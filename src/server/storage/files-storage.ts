@@ -109,6 +109,34 @@ class FilesStorage {
     await this.withRetry(() => this.client.send(command), "deleteObject");
   }
 
+  async compressIfNeeded(params: { body: Buffer; mimeType: string }): Promise<Buffer> {
+    // Only process image files
+    if (!params.mimeType.startsWith('image/')) {
+      return params.body;
+    }
+
+    try {
+      // Dynamically import sharp to avoid build issues if not available
+      const sharp = (await import('sharp')).default;
+
+      // Process the image: convert to WebP format and optimize
+      const processedImage = await sharp(params.body)
+        .webp({ quality: 80 }) // Convert to WebP with 80% quality
+        .resize(2048, 2048, { // Resize if larger than 2048x2048
+          fit: 'inside',
+          withoutEnlargement: true
+        })
+        .toBuffer();
+
+      // Only return compressed version if it's smaller than original
+      return processedImage.length < params.body.length ? processedImage : params.body;
+    } catch (error) {
+      // If compression fails, return original file
+      console.warn('[storage] Image compression failed, returning original', error);
+      return params.body;
+    }
+  }
+
   async directUpload(params: { storageKey: string; body: Buffer; mimeType: string; size: number }) {
     if (params.size <= 0 || params.size > this.maxUploadBytes) {
       throw new Error(
@@ -116,12 +144,18 @@ class FilesStorage {
       );
     }
 
+    // Compress the file if possible
+    const compressedBody = await this.compressIfNeeded({
+      body: params.body,
+      mimeType: params.mimeType
+    });
+
     const command = new PutObjectCommand({
       Bucket: this.bucket,
       Key: params.storageKey,
-      Body: params.body,
+      Body: compressedBody,
       ContentType: params.mimeType,
-      ContentLength: params.size,
+      ContentLength: compressedBody.length,
     });
 
     await this.withRetry(() => this.client.send(command), "directUpload");
