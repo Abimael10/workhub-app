@@ -25,6 +25,7 @@ export function FileGrid({ initialFiles }: FileGridProps) {
     error,
   } = api.files.list.useQuery(undefined, {
     refetchOnMount: true,
+    staleTime: 0, // Always treat data as stale to ensure fresh fetch on mount
     ...(initialFiles && { initialData: initialFiles }),
   });
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
@@ -32,7 +33,7 @@ export function FileGrid({ initialFiles }: FileGridProps) {
   const [confirmFile, setConfirmFile] = useState<FileRecord | null>(null);
 
   useEffect(() => {
-    if (Array.isArray(data)) {
+    if (data && Array.isArray(data)) {
       setFiles(data);
     }
   }, [data]);
