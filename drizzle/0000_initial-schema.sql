@@ -119,9 +119,11 @@ CREATE UNIQUE INDEX "files_org_storage_key_unique" ON "files" USING btree ("orga
 CREATE INDEX "files_organization_id_idx" ON "files" USING btree ("organization_id");--> statement-breakpoint
 CREATE INDEX "files_created_at_idx" ON "files" USING btree ("created_at");--> statement-breakpoint
 CREATE INDEX "files_updated_at_idx" ON "files" USING btree ("updated_at");--> statement-breakpoint
+CREATE INDEX "files_org_created_status_idx" ON "files" USING btree ("organization_id","created_at" DESC NULLS LAST);--> statement-breakpoint
 CREATE UNIQUE INDEX "projects_org_name_unique" ON "projects" USING btree ("organization_id","name");--> statement-breakpoint
 CREATE INDEX "projects_organization_id_idx" ON "projects" USING btree ("organization_id");--> statement-breakpoint
 CREATE INDEX "projects_created_at_idx" ON "projects" USING btree ("created_at");--> statement-breakpoint
 CREATE INDEX "projects_updated_at_idx" ON "projects" USING btree ("updated_at");--> statement-breakpoint
 CREATE INDEX "projects_status_idx" ON "projects" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "projects_priority_idx" ON "projects" USING btree ("priority");
+CREATE INDEX "projects_priority_idx" ON "projects" USING btree ("priority");--> statement-breakpoint
+CREATE INDEX "projects_org_status_priority_idx" ON "projects" USING btree ("organization_id","status","priority");

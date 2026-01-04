@@ -1,5 +1,5 @@
 {
-  "id": "9589b51a-2341-4551-952b-9e80fed99d2d",
+  "id": "c158648d-7f60-4613-9a9a-ff8dd7d5e5fb",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -704,6 +704,27 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "files_org_created_status_idx": {
+          "name": "files_org_created_status_idx",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -931,6 +952,33 @@
         "projects_priority_idx": {
           "name": "projects_priority_idx",
           "columns": [
+            {
+              "expression": "priority",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "projects_org_status_priority_idx": {
+          "name": "projects_org_status_priority_idx",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
             {
               "expression": "priority",
               "isExpression": false,
