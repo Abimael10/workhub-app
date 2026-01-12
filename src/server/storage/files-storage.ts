@@ -121,8 +121,8 @@ class FilesStorage {
 
       // Process the image: convert to WebP format and optimize
       const processedImage = await sharp(params.body)
-        .webp({ quality: 80 }) // Convert to WebP with 80% quality
-        .resize(2048, 2048, { // Resize if larger than 2048x2048
+        .webp({ quality: 75 }) // Convert to WebP with 75% quality to reduce memory usage
+        .resize(1024, 1024, { // Reduce default size from 2048 to 1024 to reduce memory usage
           fit: 'inside',
           withoutEnlargement: true
         })
