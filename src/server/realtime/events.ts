@@ -94,12 +94,20 @@ class RedisBroker implements Broker {
   }
 
   // Add cleanup method for proper resource management
-  cleanup() {
+  async cleanup() {
     if (this.isSubscribed) {
-      this.subscriber.unsubscribe(CHANNEL);
+      await this.subscriber.unsubscribe(CHANNEL);
       this.isSubscribed = false;
     }
     this.handlers.clear();
+
+    // Properly close Redis connections to free up resources
+    try {
+      await this.publisher.quit();
+      await this.subscriber.quit();
+    } catch (error) {
+      logger.warn("Error closing Redis connections", { domain: "realtime", operation: "cleanup" }, error);
+    }
   }
 }
 
@@ -120,16 +128,16 @@ function createBroker(): Broker {
 const broker = createBroker();
 
 // Add cleanup on process termination for graceful shutdown
-process.on('SIGINT', () => {
+process.on('SIGINT', async () => {
   if (broker instanceof RedisBroker) {
-    broker.cleanup();
+    await broker.cleanup();
   }
   process.exit(0);
 });
 
-process.on('SIGTERM', () => {
+process.on('SIGTERM', async () => {
   if (broker instanceof RedisBroker) {
-    broker.cleanup();
+    await broker.cleanup();
   }
   process.exit(0);
 });
