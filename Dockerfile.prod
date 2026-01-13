@@ -36,8 +36,11 @@ ENV AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
 ENV AWS_ENDPOINT_URL=${AWS_ENDPOINT_URL}
 ENV AWS_S3_MAX_UPLOAD=${AWS_S3_MAX_UPLOAD}
 
-# Copy dependencies from previous stage
-COPY --from=deps /app/node_modules ./node_modules
+# Copy package files for installing all dependencies needed for build
+COPY package.json package-lock.json ./
+# Install ALL dependencies (including dev dependencies) for building
+RUN npm ci && npm cache clean --force
+
 # Copy source code
 COPY . .
 
@@ -62,13 +65,13 @@ ENV PORT=3000
 
 # Copy necessary files from builder stage
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 # Keep migration assets available for optional runtime db:push
 COPY --from=builder --chown=nextjs:nodejs /app/drizzle.config.ts ./drizzle.config.ts
 COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
 COPY --from=builder --chown=nextjs:nodejs /app/src ./src
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 # Switch to non-root user
 USER nextjs
