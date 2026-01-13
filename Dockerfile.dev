@@ -1,12 +1,60 @@
-FROM node:20-bullseye
+FROM node:20-alpine AS development
 
 WORKDIR /app
 
+# Install dumb-init for proper signal handling (before copying app files for better layer caching)
+RUN apk add --no-cache dumb-init
+
+# Set environment
 ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
 
+# Build args to allow Railway to forward env vars during docker build
+ARG DATABASE_URL
+ARG NEXT_AUTH_SECRET
+ARG NEXTAUTH_URL
+ARG NEXT_PUBLIC_APP_URL
+ARG REDIS_URL
+ARG AWS_ACCESS_KEY_ID
+ARG AWS_SECRET_ACCESS_KEY
+ARG AWS_DEFAULT_REGION
+ARG AWS_S3_BUCKET_NAME
+ARG AWS_ENDPOINT_URL
+ARG AWS_S3_MAX_UPLOAD
+
+ENV DATABASE_URL=${DATABASE_URL}
+ENV NEXT_AUTH_SECRET=${NEXT_AUTH_SECRET}
+ENV NEXTAUTH_URL=${NEXTAUTH_URL}
+ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+ENV REDIS_URL=${REDIS_URL}
+ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+ENV AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+ENV AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
+ENV AWS_ENDPOINT_URL=${AWS_ENDPOINT_URL}
+ENV AWS_S3_MAX_UPLOAD=${AWS_S3_MAX_UPLOAD}
+
+# Copy package files first for better layer caching
 COPY package.json package-lock.json ./
-RUN npm install
 
+# Install ALL dependencies (including dev dependencies) for development
+RUN npm ci --include=dev && npm cache clean --force
+
+# Copy source code
 COPY . .
 
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nextjs -u 1001
+
+# Change ownership of the app directory to the non-root user
+RUN chown -R nextjs:nodejs /app
+
 EXPOSE 3000
+
+# Switch to non-root user
+USER nextjs
+
+# Use dumb-init to handle signals properly
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["npm", "run", "dev"]
