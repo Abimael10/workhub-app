@@ -7,109 +7,95 @@ yarn-error.log*
 
 # Testing
 coverage/
-/test-results/
-*.log
+test-results/
+playwright-report/
+tests/
 
-# Next.js
+# Next.js - Exclude during build but allow .next/static for production
 .next/
-/out/
-.next/
-.next/**/*
 !.next/static/
 !.next/static/media/
 
-# Production
+# Production build artifacts (for development builds)
 /build/
 /dist/
 /public/dist/
 
-# Environment variables - Keep local env files out of Docker but allow .env files from project root if needed
+# Environment variables - Keep local env files out of Docker
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# IDE
+# IDE and Editor
 .vscode/
 .idea/
-*.swp
-*.swo
-*.swn
-*~
+*.sublime-project
+*.sublime-workspace
 
-# System
+# System files
 .DS_Store
 Thumbs.db
-ehthumbs.db
-Icon?
-.directory
-.HFS_Plus_Standard_Metadata_Bitmap
-apfs_metadata
 
-# Logs
-*.log
-
-# NPM
-jspm_packages/
-
-# Coverage
-.nyc_output/
-
-# TypeScript
-*.tsbuildinfo
-
-
-# Cache and temp files
+# NPM/Yarn/PNPM caches
 .npm/
 .cache/
+.node-gyp/
+.yarn/cache/
+.yarn/install-state.gz
+.pnpm-store/
+
+# Temp files
 tmp/
 temp/
 *.tmp
 *.temp
 
-# Database
-*.db
-*.db-journal
+# Logs
+logs/
+*.log
 
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-VolumeIcon.icns
-
-# Sensitive files
+# Sensitive files and credentials
 config/
 secrets/
 *.key
 *.pem
 *.crt
 *.cert
-
-# Playwright
-test-results/
-playwright-report/
+.id_rsa
+.aws/
+.gcloud/
+.ssh/
 
 # Git and Docker - Important: don't include git files in Docker image
 .git/
 .gitignore
 .dockerignore
 
-# Documentation
+# Documentation (keep README.md for production)
 *.md
-*.txt
-*.pdf
+!README.md
 
-# Development and test files
-tests/
+# Development and test files (exclude from production builds)
 playwright.config.ts
 vitest.config.ts
+jest.config.ts
 eslint.config.mjs
 
-# Source maps
+# Source maps (not needed in production)
 *.map
 
-# End of .dockerignore
+# Docker related files that shouldn't be in build context
+Dockerfile*
+docker-compose*
+.docker/
+
+# Build and bundler outputs
+output/
+.nuxt/
+.svelte-kit/
+.next/cache/
+
+# Deployment platforms
+.vercel/
+.netlify/
