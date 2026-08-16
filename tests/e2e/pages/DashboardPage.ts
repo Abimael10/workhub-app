@@ -2,7 +2,7 @@ import { Page } from '@playwright/test';
 import { BasePage } from './BasePage';
 
 export class DashboardPage extends BasePage {
-  private readonly projectsLink = 'a[href="/projects"]';
+  private readonly projectsLink = 'a[href="/projects"]:has-text("Proyectos")';
   private readonly clientsLink = 'a[href="/clients"]';
   private readonly filesLink = 'a[href="/files"]';
   private readonly profileButton = 'button:has-text("Cerrar sesión")'; // The button that contains the logout option
