@@ -1,7 +1,7 @@
 ## Requirements
 
 - Node.js v20+
-- npm 9+
+- npm 10+
 - Docker and Docker Compose
 
 ## Installation
