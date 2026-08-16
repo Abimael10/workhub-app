@@ -4,7 +4,7 @@ import { RegisterPage } from './pages/RegisterPage';
 test.describe('Smoke Tests', () => {
   test('homepage loads successfully', async ({ page }) => {
     await page.goto('/');
-    await expect(page).toHaveTitle(/Entipedia/);
+    await expect(page).toHaveTitle(/WorkHub/);
     // The homepage shows login form in the auth layout, so check if login elements are visible
     await expect(page.locator('text=Ingresa a tu espacio')).toBeVisible();
   });
