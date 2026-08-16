@@ -14,8 +14,10 @@ test.describe('Profile and Organization Management', () => {
       userCredentials.organization!
     );
 
-    // Wait for navigation to projects
-    await expect(page).toHaveURL(/\/projects$/);
+    // Wait for navigation to projects. Registration + redirect round-trip can
+    // exceed the 5s default `toHaveURL` assertion timeout, so use waitForURL
+    // (30s default), matching the convention in files.spec.ts
+    await page.waitForURL(/\/projects$/);
 
     // Navigate to profile page - use more specific selectors and handle dropdown properly
     const profileButton = page.locator('button').filter({ has: page.locator('span') }).first();
@@ -24,17 +26,20 @@ test.describe('Profile and Organization Management', () => {
     // Wait for dropdown menu to be visible
     await page.locator('a[href="/profile"]').waitFor({ state: 'visible', timeout: 10000 });
 
-    // Scroll the profile link into view and click
+    // Activate the profile link via the keyboard. The Radix portaled menu item
+    // renders below the viewport on webkit (auto-scroll cannot reposition a
+    // viewport-fixed menu), so a coordinate-based click fails with "outside of the
+    // viewport". Focusing the menuitem and pressing Enter avoids coordinates.
     const profileLink = page.locator('a[href="/profile"]');
-    await profileLink.scrollIntoViewIfNeeded();
-    await profileLink.click();
-    await expect(page).toHaveURL(/\/profile$/);
+    await profileLink.focus();
+    await page.keyboard.press('Enter');
+    await page.waitForURL(/\/profile$/);
   });
 
   test('should display profile page correctly', async ({ page }) => {
     // Verify the profile page elements are present
     // The h1 contains the user's name, not "Perfil" - "Perfil" is in a smaller text element
-    await expect(page.locator('text=Perfil')).toBeVisible();
+    await expect(page.locator('p', { hasText: /^Perfil$/ })).toBeVisible();
     await expect(page.locator('h1')).toContainText('testName'); // The h1 contains the user's name
   });
 
