@@ -44,10 +44,13 @@ test.describe('Profile and Organization Management', () => {
   });
 
   test('should navigate to organization settings', async ({ page }) => {
-    // Click on the organization section
+    // The sidebar links to /profile#organization, which anchors the section
+    // rendered at src/app/(dashboard)/profile/page.tsx (#organization). Assert
+    // on the URL and that structural anchor instead of display text: the
+    // literal "Tu organización" is only a fallback for users without an
+    // organization name and never renders for users created with one.
     await page.locator('a[href="/profile#organization"]').click();
-
-    // Verify organization section is accessible
-    await expect(page.locator('text=Tu organización')).toBeVisible();
+    await page.waitForURL(/\/profile#organization$/);
+    await expect(page.locator('#organization')).toBeVisible();
   });
 });
